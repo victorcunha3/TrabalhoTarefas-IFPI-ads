@@ -10,7 +10,8 @@ contador = 0
 situacao_valida = ["nova","em andamento","pendente","cancelada"]
 situacao_final = ["resolvida"]
 
-origins = ['http://127.0.0.1:8000/tarefas/', 'http://localhost:5500',"http://127.0.0.1:5500"]
+origins = ['http://127.0.0.1:8000/tarefas/', 'http://localhost:5500',"http://127.0.0.1:5500",
+          https://glittering-druid-b1e982.netlify.app/]
 
 app.add_middleware(
     CORSMiddleware,
