@@ -2,7 +2,7 @@
 , a função aguarda a conversão dos dados para o formato JSON usando o método json() 
 da resposta e,  por fim, a função retorna os dados obtidos da API no formato JSON.*/
 
-const API_URL = 'http://127.0.0.1:8000/tarefas'
+const API_URL = 'https://tarefas-session.onrender.com/tarefas/'
 
 async function obterTarefas() {
     const response = await fetch(API_URL);
