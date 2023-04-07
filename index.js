@@ -1,7 +1,3 @@
-/*  Aqui eu definido uma função assíncrona(async) que usa a API fetch para obter os dados da API do meu backend. Quando a resposta é recebida da API
-, a função aguarda a conversão dos dados para o formato JSON usando o método json() 
-da resposta e,  por fim, a função retorna os dados obtidos da API no formato JSON.*/
-
 const API_URL = 'https://tarefas-session.onrender.com/tarefas/'
 
 async function obterTarefas() {
@@ -10,8 +6,6 @@ async function obterTarefas() {
     return data;
 }
 
-//A função criar tarefa coleta os valores do formulario html atravez do getElementById e salva os dados na cont NOVA TAREFA
-
 async function criarTarefa() {
     const descricao = document.getElementById('descricao').value;
     const responsavel = document.getElementById('responsavel').value;
@@ -19,7 +13,6 @@ async function criarTarefa() {
     const situacao = document.getElementById('situacao').value;
     const prioridade = document.getElementById('prioridade').value;
 
-    //aqui eu salvo os valores de cada tarefa
     const novaTarefa = {
         descricao: descricao,
         responsavel: responsavel,
@@ -35,8 +28,6 @@ async function criarTarefa() {
         },
         body: JSON.stringify(novaTarefa)
     });
-    // COMPARAÇÃO: se a tarefa for criada eu deixo os campos descricao e responsavel em branco
-    //em seguida eu mostro uma mensagem caso funcione e outra pra quando der erro
     if (response.status === 201) {
         document.getElementById('descricao').value = '';
         document.getElementById('responsavel').value = '';
@@ -140,8 +131,6 @@ async function listarPorSituacao() {
     exibirTarefas(tarefasFiltradas);
 }
 
-
-//Apagando a tarefa por id quando for apertado o botao EXCLUIR
 async function apagarTarefa(id) {
     const response = await fetch(`${API_URL}${id} `,{
         method: 'DELETE',
