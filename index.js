@@ -87,50 +87,6 @@ async function mostrarTarefas() {
         row.insertCell().appendChild(botaoAtualizar);
     }
 }
-
-function exibirTarefas(tarefas) {
-    const tabela = document.getElementById("tabela-tarefas");
-  
-    // Limpar conteúdo da tabela
-    tabela.innerHTML = "";
-  
-    // Adicionar cabeçalho da tabela
-    const cabecalho = `
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Descrição</th>
-          <th>Responsável</th>
-          <th>Nível</th>
-          <th>Situação</th>
-          <th>Prioridade</th>
-        </tr>
-      </thead>
-    `;
-    tabela.innerHTML += cabecalho;
-  
-    // Adiciona linhas da tabela com os dados das tarefas
-    const linhas = tarefas.map((tarefa) => `
-      <tr>
-        <td>${tarefa.id}</td>
-        <td>${tarefa.descricao}</td>
-        <td>${tarefa.responsavel}</td>
-        <td>${tarefa.nivel}</td>
-        <td>${tarefa.situacao}</td>
-        <td>${tarefa.prioridade}</td>
-      </tr>
-    `);
-    tabela.innerHTML += linhas.join("");
-}
-
-
-async function listarPorSituacao() {
-    const tarefas = await obterTarefas();
-    const situacao = document.getElementById("filtro-situacao").value;
-    const tarefasFiltradas = tarefas.filter((tarefa) => tarefa.situacao === situacao);
-    exibirTarefas(tarefasFiltradas);
-}
-
 async function apagarTarefa(id) {
     const response = await fetch(`${API_URL}${id} `,{
         method: 'DELETE',
