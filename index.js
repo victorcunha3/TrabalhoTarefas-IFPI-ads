@@ -40,23 +40,23 @@ async function criarTarefa() {
 
 async function mostrarTarefas() {
   const tarefas = await obterTarefas();
+      
   const tabela = document.getElementById('tabela-tarefas');
   tabela.innerHTML = '';
   //Juntando o cabeçalho com o conteudo
   const cabecalho = `
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Descrição</th>
-        <th>Responsável</th>
-        <th>Nível</th>
-        <th>Situação</th>
-        <th>Prioridade</th>
-      </tr>
-    </thead>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Descrição</th>
+      <th>Responsável</th>
+      <th>Nível</th>
+      <th>Situação</th>
+      <th>Prioridade</th>
+    </tr>
+  </thead>
   `;
   tabela.innerHTML += cabecalho;
-
   for (let tarefa_atual of tarefas) {
     const row = tabela.insertRow();
     row.insertCell().innerText = tarefa_atual.id;
@@ -81,9 +81,10 @@ async function mostrarTarefas() {
     botaoAtualizar.innerText = 'Atualizar';
     botaoAtualizar.classList.add('botao-js');//adicionando essa classe para estilizar o botao das linhas
     botaoAtualizar.addEventListener('click',()=>{
-      AtualizarSituacao(tarefa_atual.id)
+      atualizarTarefas(tarefa_atual.id)
     })
     row.insertCell().appendChild(botaoAtualizar);
+
   }
 }
 async function apagarTarefa(id) {
@@ -101,38 +102,69 @@ async function apagarTarefa(id) {
     mostrarTarefas();
 }
 
-async function AtualizarSituacao(id) {
+async function atualizarTarefas(id) {
+  const tarefa = await obterTarefa(id);
 
-  const novaDescricao = prompt("NOVA DESCRICAO");
-  const novoResponsavel = prompt("NOVO RESPONSAVEL");
-  const novoNivel = prompt("NOVO NIVEL");
-  const novaSituacao = prompt("NOVA SITUAÇÃO: ");
-  const novaPrioridade = prompt("NOVA PRIORIDADE");
+  const form = document.createElement("form");
 
-  const novaTarefa = {
-    descricao: novaDescricao,
-    responsavel: novoResponsavel,
-    nivel: novoNivel,
-    situacao: novaSituacao,
-    prioridade: novaPrioridade
-  };
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const formData = new FormData(form);
+    const novaTarefa = Object.fromEntries(formData.entries());
+    const response = await atualizarTarefa(id, novaTarefa);
+    if (response.status === 200) {
+      console.log("Tarefa atualizada com sucesso");
+      mostrarTarefas();
+    } else {
+      console.log("Erro ao atualizar tarefa");
+    }
 
+    form.remove();
+  });
+
+
+  for (const [campo, valor] of Object.entries(tarefa)) {
+    if (campo === "id") {
+      continue;
+    }
+    const label = document.createElement("label");
+    label.innerText = campo;
+    label.classList.add("form__label"); 
+    const input = document.createElement("input");
+    input.setAttribute("name", campo);
+    input.setAttribute("value", valor);
+    input.classList.add("form__input"); 
+    form.appendChild(label);
+    form.appendChild(input);
+  }
+
+
+  const ConfirmarUpdate = document.createElement("button");
+  ConfirmarUpdate.innerText = "Confirmar";
+  ConfirmarUpdate.classList.add("form__submit"); 
+  form.appendChild(ConfirmarUpdate);
+
+  // exibindo o formulário na tela
+  const container = document.getElementById("formulario");
+  container.innerHTML = "";
+  container.appendChild(form);
+}
+
+async function obterTarefa(id) {
+  const response = await fetch(`${API_URL}${id}`);
+  const data = await response.json();
+  return data;
+}
+
+async function atualizarTarefa(id, tarefa) {
   const response = await fetch(`${API_URL}${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(novaTarefa),
+    body: JSON.stringify(tarefa),
   });
-  
-  if (response.status === 200) {
-    console.log("Situação atualizada com sucesso");
-    mostrarTarefas();
-  } else {
-    console.log("Erro ao atualizar situação");
-  }
+  return response;
 }
-  
-
 
 mostrarTarefas()
